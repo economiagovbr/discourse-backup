@@ -4,6 +4,11 @@ DOMINIO="ecodados.economia.gov.br"
 DIR_LOCAL="/home/backup/.backups"
 DIR_REMOTE="/var/discourse/shared/web-only/backups/default"
 
+mkdir -p ${DIR_LOCAL}
+mkdir -p ${DIR_LOCAL}/${DOMINIO}
+mkdir -p /srv/backups/archive/$DOMINIO
+
+
 # Execute backup script
 DATE=`date +"%Y-%m-%d"`
 
