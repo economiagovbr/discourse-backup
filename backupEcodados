@@ -1,7 +1,7 @@
 #!/bin/bash
 SSH_USER="cginf"
 DOMINIO="ecodados.economia.gov.br"
-DIR_LOCAL="/home/nitai/.backups"
+DIR_LOCAL="/home/backup/.backups"
 DIR_REMOTE="/var/discourse/shared/web-only/backups/default"
 
 # Execute backup script
