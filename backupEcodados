@@ -1,0 +1,18 @@
+#!/bin/bash
+SSH_USER="cginf"
+DOMINIO="ecodados.economia.gov.br"
+DIR_LOCAL="/home/nitai/.backups"
+DIR_REMOTE="/var/discourse/shared/web-only/backups/default"
+
+# Execute backup script
+DATE=`date +"%Y-%m-%d"`
+
+echo "Baixando arquivos do servidor para a máquina local"
+#rsync -ruv $SSH_USER@$DOMINIO:${DIR_REMOTE}/* ${DIR_LOCAL}/$DOMINIO/ > ${DIR_LOCAL}/$DOMINIO/"$DOMINIO-$DATE".log
+rsync -ruv $SSH_USER@10.209.42.45:${DIR_REMOTE}/* ${DIR_LOCAL}/$DOMINIO/ > ${DIR_LOCAL}/$DOMINIO/"$DOMINIO-$DATE".log
+
+echo "Copiando arquivos antigos (com mais de 7 dias) para a pasta de arquivo morto"
+find ${DIR_LOCAL}/$DOMINIO -mtime +7 -exec mv {} /srv/backups/archive/$DOMINIO \;
+
+# Remove todos os backups com mais de 30 dias
+find /srv/backups/archive/$DOMINIO -mtime +30 -exec rm {} \;

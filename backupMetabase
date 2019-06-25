@@ -1,0 +1,80 @@
+#!/bin/sh
+rsync -a cginf@cginflab.mp.intra:/home/cginf/metabase-data ~/metabase-data/
+
+# #!/bin/bash
+# # Execute backup script
+# DATE=`date +"%Y-%m-%d"`
+# BACKUP_DIR="eduardosan.com  git  owncloud.eduardosan.com  repositorio.eduardosan.com  softwarepublico.org  svn"
+# DIR="/home/nitai/metabase-data/"
+# KEEP_DAYS=7
+
+# # Bancos de dados e senhas
+# DB[0]=""
+# USER[0]=""
+# SENHA[0]=""
+# HOST[0]=""
+
+# DB[1]=""
+# USER[1]=""
+# SENHA[1]=""
+# HOST[1]=""
+
+# ###
+# # FIM DAS CONFIGURAÇÕES
+# ####
+
+# # Create dir if it doesn't exists
+# mkdir -p ${DIR}
+# mkdir -p ${DIR}/arquivos
+# mkdir -p ${DIR}/bancos
+# mkdir -p ${DIR}/full
+
+# echo "Realizando backup em $/backupATE}..."
+
+# for directory in $BACKUP_DIR
+# do
+#         echo "Realizando backup do diretório $directory ..."
+#         tar -czf ${DIR}/arquivos/${directory}-${DATE}.tar.gz $directory
+#         echo "Backup do diretório $directory concluído com sucesso"
+# done
+
+# # Agora faz backup dos bancos
+# i=0
+# for banco in ${DB[@]} 
+# do
+#         echo "Fazendo backup do banco $banco ..."
+#         filename=${DIR}/bancos/$banco-${DATE}.dmp
+#         mysqldump -u "${USER[$i]}" -h "${HOST[$i]}" -p"${SENHA[$i]}" $banco > $filename
+
+#         echo "Comprimindo $filename ..."
+#         gzip $filename
+#         echo "Backup do banco $banco finalizado!"
+#         i=$i+1
+# done
+
+# # Cria pacote com todos os backups
+# tar --remove-files -czf ${DIR}/full/backup-${DATE}.tar.gz ${DIR}/arquivos ${DIR}/bancos
+
+# # Agora apaga arquivos intermediários
+# echo "Removendo arquivos do backup..."
+# rm ${DIR}/arquivos/*
+# rm ${DIR}/bancos/*
+
+# # Apaga arquivos mais velhos que X dias
+# echo "Removendo arquivos gerados há mais de $KEEP_DAYS dias"
+# find ${DIR}/full -mtime +${KEEP_DAYS} -exec rm {} \;
+
+# echo ${DATE} > ${DIR}/lastdate
+# echo "Backup finalizado!"
+
+# # Copia arquivo para o diretório de download
+# full=${DOWNLOAD_DIR} + "dreamhost-full.tar"
+
+# if [ -f "${full}.gz" ]
+# then
+#         gunzip $full
+#         tar --remove-files -rf $full ${DIR}/full/*
+#         gzip $full
+# else
+#         tar --remove-files -czf ${full}.gz ${DIR}/full/*
+# fi
