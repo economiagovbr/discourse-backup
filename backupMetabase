@@ -1,26 +1,31 @@
 #!/bin/sh
 
-mkdir -p /home/backup/.metabase
-
 DATE=`date +"%Y-%m-%d"`
 NAME="metabase-data-${DATE}"
-DIR="/home/backup/.metabase/"
+DIR_LOCAL="/home/backup/.metabase/"
+SSH_USER="cginf"
+DOMINIO="cginflab.mp.intra"
+DIR_REMOTE="/home/cginf/metabase-data"
 KEEP_DAYS=7
 
+mkdir -p /home/backup/.metabase
+mkdir -p /srv/backups/archive/$DOMINIO
+
 # Criando backup zipado caso ele não exista
-if [ ! -f "${DIR}${NAME}.tar.gz" ];
+if [ ! -f "${DIR_LOCAL}${NAME}.tar.gz" ];
 then 
 
-    scp -r cginf@cginflab.mp.intra:/home/cginf/metabase-data ${DIR}${NAME}
-    cd ${DIR} && tar -cvzf ${NAME}.tar.gz -P ${NAME} && rm -rf ${NAME}
+    scp -r ${SSH_USER}@${DOMINIO}:${DIR_REMOTE} ${DIR_LOCAL}${NAME}
+    cd ${DIR_LOCAL} && tar -cvzf ${NAME}.tar.gz -P ${NAME} && rm -rf ${NAME}
 
-    # Apaga arquivos mais velhos que X dias
-    echo "Removendo arquivos gerados há mais de $KEEP_DAYS dias"
-    find ${DIR}* -mtime +${KEEP_DAYS} -delete;
+    echo "Copiando arquivos antigos (com mais de 7 dias) para a pasta de arquivo morto"
+    find ${DIR_LOCAL}* -mtime +${KEEP_DAYS} -exec mv {} /srv/backups/archive/$DOMINIO \;
 
-    echo ${DATE} > ${DIR}/lastdate
+    # Remove todos os backups com mais de 30 dias
+    find /srv/backups/archive/$DOMINIO -mtime +30 -exec rm {} \;
+
+
+    echo ${DATE} > ${DIR_LOCAL}/lastdate
     echo "Backup finalizado!"
-
-
 
 fi
